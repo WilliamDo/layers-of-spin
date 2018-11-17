@@ -3,7 +3,10 @@ from flask import jsonify
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello():
-    return jsonify({ "message": "Hello World!" })
+@app.route("/league", methods=["GET"])
+def league():
+    return jsonify({
+        "name": "West Essex",
+        "divisions": ["Division 1", "Division 2", "Division 3"]
+    })
 
