@@ -29,8 +29,3 @@ test:
   - pip install pytest
   - py.test
 
-production:
-  stage: deploy
-  script: git push https://$AZ_DEPLOY_USERNAME:$AZ_DEPLOY_PASSWORD@ply-uts.scm.azurewebsites.net/ply-uts.git master
-  environment:
-    name: production
