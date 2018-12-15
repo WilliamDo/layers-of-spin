@@ -1,10 +1,13 @@
 from flask import Flask, jsonify, request
 
+import ply.config
 import ply.database
 
 
 def create_app():
     app = Flask(__name__)
+
+    app.config.from_object(config.Config())
 
     @app.route("/alive", methods=["GET"])
     def alive():
