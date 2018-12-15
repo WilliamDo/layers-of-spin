@@ -9,16 +9,14 @@ def client():
 
 
 def test_create_player(client):
-    rv = client.post('/player', json={'firstName': 'Adam', 'lastName': 'Eve'})
-    assert rv.status_code == 201
-    json = rv.json
-    print(json)
+    create_player_response = client.post('/player', json={'firstName': 'Adam', 'lastName': 'Eve'})
+    assert create_player_response.status_code == 201
+    create_player_result = create_player_response.json
 
-    rv = client.get(f'/player/{json["id"]}')
-    assert rv.status_code == 200
-    json = rv.json
-    print(json)
+    get_player_response = client.get(f'/player/{create_player_result["id"]}')
+    assert get_player_response.status_code == 200
+    player = get_player_response.json
 
-    assert json['firstName'] == 'Adam'
-    assert json['lastName'] == 'Eve'
+    assert player['firstName'] == 'Adam'
+    assert player['lastName'] == 'Eve'
 
