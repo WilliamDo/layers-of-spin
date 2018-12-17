@@ -28,7 +28,30 @@ def create_player(player):
 def get_player(player_id):
     with get_connection() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute("SELECT * FROM player where id = %s", (player_id,))
+            curs.execute("SELECT * FROM player WHERE id = %s", (player_id, ))
             data = curs.fetchone()
             curs.close()
             return data
+
+FIXTURE_QUERY = '''
+select home_player.first_name || ' ' || home_player.last_name as home_player, away_player.first_name || ' ' || away_player.last_name as away_player
+from fixture f
+inner join "match" m on f.id = m.fixture_id
+inner join player home_player on home_player.id = m.home_player_id
+inner join player away_player on away_player.id = m.away_player_id
+where f.id = %s
+'''
+
+def get_fixture(fixture_id):
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(FIXTURE_QUERY, (fixture_id, ))
+            matches = [format_match(match) for match in curs]
+            return {'matches': matches}
+
+
+def format_match(match):
+    return {
+        'home_player': match['home_player'],
+        'away_player': match['away_player']
+    }

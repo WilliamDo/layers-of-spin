@@ -20,3 +20,9 @@ def get_player(player_id):
         "firstName": player["first_name"],
         "lastName": player["last_name"]
     })
+
+
+@bp.route("/fixture/<int:fixture_id>", methods=["GET"])
+def get_fixture(fixture_id):
+    fixture = ply.database.get_fixture(fixture_id)
+    return jsonify(fixture)

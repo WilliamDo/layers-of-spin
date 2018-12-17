@@ -20,3 +20,19 @@ def test_create_player(client):
     assert player['firstName'] == 'Adam'
     assert player['lastName'] == 'Eve'
 
+
+def test_get_fixture(client):
+    fixture_response = client.get('/api/fixture/1')
+    assert fixture_response.status_code == 200
+    fixture = fixture_response.json
+
+    assert fixture == {
+        'matches': [
+            {
+                'home_player': 'Timo Boll',
+                'away_player': 'Vladimir Samsonov'
+            }
+        ]
+    }
+
+
