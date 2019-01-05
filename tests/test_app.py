@@ -27,10 +27,36 @@ def test_get_fixture(client):
     fixture = fixture_response.json
 
     assert fixture == {
+        'date': '2018-12-19',
+
+        'homeTeam': {
+            'name': 'Team A',
+            'players': [
+                {'id': 1, 'firstName': 'Timo', 'lastName': 'Boll'},
+                {'id': 2, 'firstName': 'Player', 'lastName': '2'}
+            ]
+        },
+
+        'awayTeam': {
+            'name': 'Team B',
+            'players': [
+                {'id': 4, 'firstName': 'Vladimir', 'lastName': 'Samsonov'},
+                {'id': 5, 'firstName': 'Player', 'lastName': '5'}
+            ]
+        },
+
         'matches': [
             {
-                'home_player': 'Timo Boll',
-                'away_player': 'Vladimir Samsonov'
+                'homePlayerId': [1],
+                'awayPlayerId': [4],
+                'homeScore': [11, 11, 11],
+                'awayScore': [7, 8, 9]
+            },
+            {
+                'homePlayerId': [2],
+                'awayPlayerId': [5],
+                'homeScore': [11, 11, 11],
+                'awayScore': [7, 8, 9]
             }
         ]
     }

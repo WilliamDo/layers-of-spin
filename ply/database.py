@@ -42,16 +42,49 @@ inner join player away_player on away_player.id = m.away_player_id
 where f.id = %s
 '''
 
-def get_fixture(fixture_id):
+
+def get_matches(fixture_id):
     with get_connection() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute(FIXTURE_QUERY, (fixture_id, ))
-            matches = [format_match(match) for match in curs]
-            return {'matches': matches}
+            curs.execute('select * from "match" where fixture_id = %s', (fixture_id, ))
+            return [format_match(match) for match in curs]
+
+def get_fixture_details(fixture_id):
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute('select * from fixture where id = %s', (fixture_id, ))
+            return curs.fetchone()
+
+def get_fixture(fixture_id):
+    fixture = get_fixture_details(fixture_id)
+    matches = get_matches(fixture_id)
+
+    return {
+        'date': fixture['fixture_date'].strftime('%Y-%m-%d'),
+
+        'homeTeam': {
+            'name': fixture['home_team'],
+            'players': [
+                {'id': 1, 'firstName': 'Timo', 'lastName': 'Boll'},
+                {'id': 2, 'firstName': 'Player', 'lastName': '2'}
+            ]
+        },
+
+        'awayTeam': {
+            'name': fixture['away_team'],
+            'players': [
+                {'id': 4, 'firstName': 'Vladimir', 'lastName': 'Samsonov'},
+                {'id': 5, 'firstName': 'Player', 'lastName': '5'}
+            ]
+        },
+        'matches': matches
+    }
 
 
 def format_match(match):
     return {
-        'home_player': match['home_player'],
-        'away_player': match['away_player']
+        'homePlayerId': [match['home_player_id']],
+        'awayPlayerId': [match['away_player_id']],
+        'homeScore': match['home_score'],
+        'awayScore': match['away_score']
     }
