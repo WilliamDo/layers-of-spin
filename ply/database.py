@@ -34,26 +34,27 @@ def get_player(player_id):
             return data
 
 FIXTURE_QUERY = '''
-select home_player.first_name || ' ' || home_player.last_name as home_player, away_player.first_name || ' ' || away_player.last_name as away_player
+select f.fixture_date, home.team_name home_team, away.team_name away_team
 from fixture f
-inner join "match" m on f.id = m.fixture_id
-inner join player home_player on home_player.id = m.home_player_id
-inner join player away_player on away_player.id = m.away_player_id
-where f.id = %s
+  inner join team home on f.home_team_id = home.id
+  inner join team away on f.away_team_id = away.id
+where f.id = %s;
 '''
 
 
 def get_matches(fixture_id):
     with get_connection() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute('select * from "match" where fixture_id = %s', (fixture_id, ))
+            curs.execute('select * from fixture_match where fixture_id = %s', (fixture_id, ))
             return [format_match(match) for match in curs]
+
 
 def get_fixture_details(fixture_id):
     with get_connection() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
-            curs.execute('select * from fixture where id = %s', (fixture_id, ))
+            curs.execute(FIXTURE_QUERY, (fixture_id, ))
             return curs.fetchone()
+
 
 def get_fixture(fixture_id):
     fixture = get_fixture_details(fixture_id)
