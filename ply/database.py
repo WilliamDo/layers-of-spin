@@ -34,12 +34,28 @@ def get_player(player_id):
             return data
 
 FIXTURE_QUERY = '''
-select f.fixture_date, home.team_name home_team, away.team_name away_team
+select f.fixture_date, f.home_team_id, f.away_team_id, th.team_name home_team, ta.team_name away_team
 from fixture f
-  inner join team home on f.home_team_id = home.id
-  inner join team away on f.away_team_id = away.id
-where f.id = %s;
+  inner join fixture_team fth on fth.id = f.home_team_id
+  inner join fixture_team fta on fta.id = f.away_team_id
+  inner join team th on fth.team_id = th.id
+  inner join team ta on fta.team_id = ta.id
+where f.id = 1;
 '''
+
+FIXTURE_PLAYER_QUERY = '''
+select *
+from fixture_player fp
+inner join player p on fp.player_id = p.id
+where fp.fixture_team_id = %s
+'''
+
+
+def get_fixture_players(fixture_team_id):
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as curs:
+            curs.execute(FIXTURE_PLAYER_QUERY, (fixture_team_id, ))
+            return [format_player(player) for player in curs]
 
 
 def get_matches(fixture_id):
@@ -60,23 +76,21 @@ def get_fixture(fixture_id):
     fixture = get_fixture_details(fixture_id)
     matches = get_matches(fixture_id)
 
+    # TODO there is a downside here that the two queries here are dependent on the first one and cannot be run in parallel
+    home_players = get_fixture_players(fixture['home_team_id'])
+    away_players = get_fixture_players(fixture['away_team_id'])
+
     return {
         'date': fixture['fixture_date'].strftime('%Y-%m-%d'),
 
         'homeTeam': {
             'name': fixture['home_team'],
-            'players': [
-                {'id': 1, 'firstName': 'Timo', 'lastName': 'Boll'},
-                {'id': 2, 'firstName': 'Player', 'lastName': '2'}
-            ]
+            'players': home_players
         },
 
         'awayTeam': {
             'name': fixture['away_team'],
-            'players': [
-                {'id': 4, 'firstName': 'Vladimir', 'lastName': 'Samsonov'},
-                {'id': 5, 'firstName': 'Player', 'lastName': '5'}
-            ]
+            'players': away_players
         },
         'matches': matches
     }
@@ -88,4 +102,12 @@ def format_match(match):
         'awayPlayerId': [match['away_player_id']],
         'homeScore': match['home_score'],
         'awayScore': match['away_score']
+    }
+
+
+def format_player(player):
+    return {
+        'id': player['player_id'],
+        'firstName': player['first_name'],
+        'lastName': player['last_name'],
     }

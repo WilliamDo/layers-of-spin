@@ -33,7 +33,8 @@ def test_get_fixture(client):
             'name': 'Team A',
             'players': [
                 {'id': 1, 'firstName': 'Timo', 'lastName': 'Boll'},
-                {'id': 2, 'firstName': 'Player', 'lastName': '2'}
+                {'id': 2, 'firstName': 'Jike', 'lastName': 'Zhang'},
+                {'id': 3, 'firstName': 'Koki', 'lastName': 'Niwa'},
             ]
         },
 
@@ -41,7 +42,7 @@ def test_get_fixture(client):
             'name': 'Team B',
             'players': [
                 {'id': 4, 'firstName': 'Vladimir', 'lastName': 'Samsonov'},
-                {'id': 5, 'firstName': 'Player', 'lastName': '5'}
+                {'id': 5, 'firstName': 'Jun', 'lastName': 'Mizutani'}
             ]
         },
 
