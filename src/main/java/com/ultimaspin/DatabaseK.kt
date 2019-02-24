@@ -1,5 +1,6 @@
 package com.ultimaspin
 
+import com.ultimaspin.dao.PlayerDao
 import org.jdbi.v3.core.Jdbi
 
 fun main() {
@@ -22,6 +23,11 @@ fun main() {
     println(repo.getFixture(1))
 
     println(dao.getMatches(1))
+
+    val playerDao = PlayerDao(jdbi)
+
+    val playerId = playerDao.createPlayer("Joe", "Bloggs")
+    println(playerDao.getPlayer(playerId))
 
 }
 
