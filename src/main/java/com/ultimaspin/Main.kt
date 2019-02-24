@@ -1,5 +1,6 @@
 package com.ultimaspin
 
+import com.ultimaspin.dao.PlayerDao
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
 import io.ktor.http.*
@@ -13,8 +14,9 @@ import org.jdbi.v3.core.Jdbi
 fun main() {
 
     val jdbi = Jdbi.create("jdbc:postgresql://localhost/ply?user=ply&password=docker")
-    val dao = FixtureDao(jdbi)
-    val repo = FixtureRepo(dao)
+    val fixtureDao = FixtureDao(jdbi)
+    val playerDao = PlayerDao(jdbi)
+    val repo = FixtureRepo(fixtureDao)
 
     val server = embeddedServer(Netty, 8080) {
         install(ContentNegotiation) {
@@ -25,16 +27,13 @@ fun main() {
             get("/") {
                 call.respondText("Hello, world!", ContentType.Text.Html)
             }
-            get("/snippets") {
-                call.respond(mapOf("OK" to true))
+            get("/player/{playerId}") {
+                val playerId = call.parameters["playerId"]!!
+                call.respond(playerDao.getPlayer(playerId.toInt()))
             }
             get("/fixture/{fixtureId}") {
-                val fixtureId = call.parameters["fixtureId"]
-                if (fixtureId == null) {
-                    call.respond(HttpStatusCode.BadRequest)
-                } else {
-                    call.respond(repo.getFixture(fixtureId.toInt()))
-                }
+                val fixtureId = call.parameters["fixtureId"]!!
+                call.respond(repo.getFixture(fixtureId.toInt()))
             }
         }
     }
