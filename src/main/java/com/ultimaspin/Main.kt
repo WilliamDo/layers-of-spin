@@ -8,13 +8,12 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.util.getOrFail
 import org.jdbi.v3.core.Jdbi
 
 fun main() {
 
     val jdbi = Jdbi.create("jdbc:postgresql://localhost/ply?user=ply&password=docker")
-    val dao = Dao(jdbi)
+    val dao = FixtureDao(jdbi)
     val repo = FixtureRepo(dao)
 
     val server = embeddedServer(Netty, 8080) {

@@ -16,7 +16,7 @@ fun main() {
 
     println(result)
 
-    val dao = Dao(jdbi)
+    val dao = FixtureDao(jdbi)
     val repo = FixtureRepo(dao)
 
     println(repo.getFixture(1))
@@ -25,14 +25,14 @@ fun main() {
 
 }
 
-class FixtureRepo(private val dao: Dao) {
+class FixtureRepo(private val fixtureDao: FixtureDao) {
     fun getFixture(fixtureId: Int): FixtureResponse {
 
-        val fixtureDetails = dao.getFixtureDetails(fixtureId)
-        val matches = dao.getMatches(fixtureId) // todo this can be run in parallel with the fixture query
+        val fixtureDetails = fixtureDao.getFixtureDetails(fixtureId)
+        val matches = fixtureDao.getMatches(fixtureId) // todo this can be run in parallel with the fixture query
 
-        val homePlayers = dao.getFixturePlayers(fixtureDetails.homeTeamId)
-        val awayPlayers = dao.getFixturePlayers(fixtureDetails.awayTeamId)
+        val homePlayers = fixtureDao.getFixturePlayers(fixtureDetails.homeTeamId)
+        val awayPlayers = fixtureDao.getFixturePlayers(fixtureDetails.awayTeamId)
 
         return FixtureResponse(
                 homeTeam = Team(fixtureDetails.homeTeam, homePlayers),
@@ -42,7 +42,7 @@ class FixtureRepo(private val dao: Dao) {
     }
 }
 
-class Dao(private val jdbi: Jdbi) {
+class FixtureDao(private val jdbi: Jdbi) {
 
 
     fun getFixtureDetails(fixtureId: Int): FixtureDetails {
@@ -85,13 +85,8 @@ class Dao(private val jdbi: Jdbi) {
         return jdbi.withHandle<List<Player>, Exception> { handle ->
             handle.createQuery(sql)
                     .bind("fixtureTeamId", fixtureTeamId)
-                    .map { rs, _ ->
-                        Player(
-                                rs.getString("first_name"),
-                                rs.getString("last_name")
-                        )
-
-                    }.toList()
+                    .map { rs, _ -> Player(rs.getString("first_name"), rs.getString("last_name")) }
+                    .toList()
         }
     }
 
@@ -101,11 +96,9 @@ class Dao(private val jdbi: Jdbi) {
         return jdbi.withHandle<List<Match>, Exception> { handle ->
             handle.createQuery(sql)
                     .bind("fixtureId", fixtureId)
-                    .map { rs, _ ->
-                        Match(
-                                homeScore = rs.getString("home_score"),
-                                awayScore = rs.getString("away_score"))
-                    }.toList()
+                    // todo turn this into JSON?
+                    .map { rs, _ -> Match(homeScore = rs.getString("home_score"), awayScore = rs.getString("away_score")) }
+                    .toList()
 
         }
     }
