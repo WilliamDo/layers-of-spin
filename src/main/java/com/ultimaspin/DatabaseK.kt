@@ -21,19 +21,23 @@ fun main() {
 
     println(repo.getFixture(1))
 
+    println(dao.getMatches(1))
+
 }
 
 class FixtureRepo(private val dao: Dao) {
     fun getFixture(fixtureId: Int): FixtureResponse {
 
         val fixtureDetails = dao.getFixtureDetails(fixtureId)
+        val matches = dao.getMatches(fixtureId) // todo this can be run in parallel with the fixture query
 
         val homePlayers = dao.getFixturePlayers(fixtureDetails.homeTeamId)
         val awayPlayers = dao.getFixturePlayers(fixtureDetails.awayTeamId)
 
         return FixtureResponse(
                 homeTeam = Team(fixtureDetails.homeTeam, homePlayers),
-                awayTeam = Team(fixtureDetails.awayTeam, awayPlayers)
+                awayTeam = Team(fixtureDetails.awayTeam, awayPlayers),
+                matches = matches
         )
     }
 }
@@ -86,11 +90,29 @@ class Dao(private val jdbi: Jdbi) {
                                 rs.getString("first_name"),
                                 rs.getString("last_name")
                         )
+
                     }.toList()
         }
     }
 
+    fun getMatches(fixtureId: Int): List<Match> {
+        val sql = "select * from fixture_match where fixture_id = :fixtureId"
+
+        return jdbi.withHandle<List<Match>, Exception> { handle ->
+            handle.createQuery(sql)
+                    .bind("fixtureId", fixtureId)
+                    .map { rs, _ ->
+                        Match(
+                                homeScore = rs.getString("home_score"),
+                                awayScore = rs.getString("away_score"))
+                    }.toList()
+
+        }
+    }
+
 }
+
+data class Match(val homeScore: String, val awayScore: String)
 
 data class Player(val firstName: String, val lastName: String)
 
@@ -101,4 +123,4 @@ data class FixtureDetails(val homeTeamId: Int,
                           val homeTeam: String,
                           val awayTeam: String)
 
-data class FixtureResponse(val homeTeam: Team, val awayTeam: Team)
+data class FixtureResponse(val homeTeam: Team, val awayTeam: Team, val matches: List<Match>)
