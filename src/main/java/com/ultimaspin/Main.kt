@@ -21,6 +21,7 @@ fun main() {
     val server = embeddedServer(Netty, 8080) {
         install(ContentNegotiation) {
             jackson {
+                // todo do I need anything here?
             }
         }
         routing {
