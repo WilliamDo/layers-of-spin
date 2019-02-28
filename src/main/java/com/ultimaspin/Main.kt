@@ -27,19 +27,21 @@ fun main() {
             get("/") {
                 call.respondText("Hello, world!", ContentType.Text.Html)
             }
-            route("/player") {
-                get("{playerId}") {
-                    val playerId = call.parameters["playerId"]!!
-                    call.respond(playerDao.getPlayer(playerId.toInt()))
+            route("/api") {
+                route("player") {
+                    get("{playerId}") {
+                        val playerId = call.parameters["playerId"]!!
+                        call.respond(playerDao.getPlayer(playerId.toInt()))
+                    }
+                    post {
+                        // todo get name from request body
+                        call.respond(mapOf("id" to playerDao.createPlayer("Joe", "Bloggs")))
+                    }
                 }
-                post {
-                    // todo get name from request body
-                    call.respond(mapOf("id" to playerDao.createPlayer("Joe", "Bloggs")))
+                get("/fixture/{fixtureId}") {
+                    val fixtureId = call.parameters["fixtureId"]!!
+                    call.respond(repo.getFixture(fixtureId.toInt()))
                 }
-            }
-            get("/fixture/{fixtureId}") {
-                val fixtureId = call.parameters["fixtureId"]!!
-                call.respond(repo.getFixture(fixtureId.toInt()))
             }
         }
     }
