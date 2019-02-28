@@ -1,5 +1,7 @@
 package com.ultimaspin
 
+import com.ultimaspin.dao.FixtureDao
+import com.ultimaspin.dao.FixtureRepo
 import com.ultimaspin.dao.PlayerDao
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation

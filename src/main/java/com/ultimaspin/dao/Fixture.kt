@@ -1,6 +1,5 @@
-package com.ultimaspin
+package com.ultimaspin.dao
 
-import com.ultimaspin.dao.PlayerDao
 import org.jdbi.v3.core.Jdbi
 
 fun main() {

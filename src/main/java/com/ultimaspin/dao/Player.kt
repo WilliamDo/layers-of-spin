@@ -1,6 +1,5 @@
 package com.ultimaspin.dao
 
-import com.ultimaspin.Player
 import org.jdbi.v3.core.Jdbi
 
 class PlayerDao(private val jdbi: Jdbi) {
