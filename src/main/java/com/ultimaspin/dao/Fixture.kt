@@ -2,34 +2,6 @@ package com.ultimaspin.dao
 
 import org.jdbi.v3.core.Jdbi
 
-fun main() {
-    println("Ya")
-
-    val jdbi = Jdbi.create("jdbc:postgresql://localhost/ply?user=ply&password=docker")
-
-
-    val result = jdbi.withHandle<Int, Exception> { handle ->
-        handle.createQuery("select 2 + 2")
-                .mapTo(Int::class.java)
-                .findOnly()
-    }
-
-    println(result)
-
-    val dao = FixtureDao(jdbi)
-    val repo = FixtureRepo(dao)
-
-    println(repo.getFixture(1))
-
-    println(dao.getMatches(1))
-
-    val playerDao = PlayerDao(jdbi)
-
-    val playerId = playerDao.createPlayer("Joe", "Bloggs")
-    println(playerDao.getPlayer(playerId))
-
-}
-
 class FixtureRepo(private val fixtureDao: FixtureDao) {
     fun getFixture(fixtureId: Int): FixtureResponse {
 
