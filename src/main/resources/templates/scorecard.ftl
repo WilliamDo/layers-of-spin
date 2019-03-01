@@ -3,9 +3,11 @@
 
 <table>
     <#list fixture.matches as match>
+        <#assign homePlayer=fixture.homeTeam.getPlayer(match.homePlayerId)>
+        <#assign awayPlayer=fixture.awayTeam.getPlayer(match.awayPlayerId)>
         <tr>
-            <td>${match.homePlayerId}</td>
-            <td>${match.awayPlayerId}</td>
+            <td>${homePlayer.firstName} ${homePlayer.lastName}</td>
+            <td>${awayPlayer.firstName} ${awayPlayer.lastName}</td>
         </tr>
 
     </#list>

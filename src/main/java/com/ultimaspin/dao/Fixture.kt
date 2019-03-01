@@ -109,7 +109,12 @@ data class Match(val homePlayerId: Int,
 
 data class FixturePlayer(val fixturePlayerId: Int, val firstName: String, val lastName: String)
 
-data class Team(val name: String, val players: List<FixturePlayer>)
+data class Team(val name: String, val players: List<FixturePlayer>) {
+    fun getPlayer(id: Int): FixturePlayer {
+        // todo find a better way to protect myself from this forcing the optional
+        return players.find { it.fixturePlayerId == id }!!
+    }
+}
 
 data class FixtureDetails(val homeTeamId: Int,
                           val awayTeamId: Int,
