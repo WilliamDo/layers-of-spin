@@ -105,7 +105,12 @@ class FixtureDao(private val jdbi: Jdbi) {
 data class Match(val homePlayerId: Int,
                  val awayPlayerId: Int,
                  val homeScore: Array<Int>,
-                 val awayScore: Array<Int>)
+                 val awayScore: Array<Int>) {
+
+    // todo validate that away and home score arrays are same size or enforce it with a type
+    val numberOfGames = homeScore.size
+
+}
 
 data class FixturePlayer(val fixturePlayerId: Int, val firstName: String, val lastName: String)
 
