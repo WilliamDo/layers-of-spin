@@ -1,6 +1,8 @@
 package com.ultimaspin.dao
 
+import com.google.gson.Gson
 import org.jdbi.v3.core.Jdbi
+import java.sql.ResultSet
 
 class FixtureRepo(private val fixtureDao: FixtureDao) {
     fun getFixture(fixtureId: Int): FixtureResponse {
@@ -50,7 +52,7 @@ class FixtureDao(private val jdbi: Jdbi) {
 
     }
 
-    fun getFixturePlayers(fixtureTeamId: Int): List<Player> {
+    fun getFixturePlayers(fixtureTeamId: Int): List<FixturePlayer> {
         // todo make this a constant
         val sql = """
             select *
@@ -59,10 +61,15 @@ class FixtureDao(private val jdbi: Jdbi) {
             where fp.fixture_team_id = :fixtureTeamId
         """.trimIndent()
 
-        return jdbi.withHandle<List<Player>, Exception> { handle ->
+        return jdbi.withHandle<List<FixturePlayer>, Exception> { handle ->
             handle.createQuery(sql)
                     .bind("fixtureTeamId", fixtureTeamId)
-                    .map { rs, _ -> Player(rs.getString("first_name"), rs.getString("last_name")) }
+                    .map { rs, _ ->
+                        FixturePlayer(
+                                fixturePlayerId = rs.getInt("id"),
+                                firstName = rs.getString("first_name"),
+                                lastName = rs.getString("last_name"))
+                    }
                     .toList()
         }
     }
@@ -73,20 +80,36 @@ class FixtureDao(private val jdbi: Jdbi) {
         return jdbi.withHandle<List<Match>, Exception> { handle ->
             handle.createQuery(sql)
                     .bind("fixtureId", fixtureId)
-                    // todo turn this into JSON?
-                    .map { rs, _ -> Match(homeScore = rs.getString("home_score"), awayScore = rs.getString("away_score")) }
+                    .map { rs, _ ->
+                        Match(
+                                homePlayerId = rs.getInt("home_player_id"),
+                                awayPlayerId = rs.getInt("away_player_id"),
+                                homeScore = rs.getScore("home_score"),
+                                awayScore = rs.getScore("away_score")
+                        )
+                    }
                     .toList()
 
         }
     }
 
+    private fun ResultSet.getScore(fieldName: String): Array<Int> {
+        val characterStream = getCharacterStream(fieldName)
+        // todo maybe use built-in json from ktor instead of using an extra dependency?
+        val gson = Gson()
+        return gson.fromJson(characterStream, Array<Int>::class.java)
+    }
+
 }
 
-data class Match(val homeScore: String, val awayScore: String)
+data class Match(val homePlayerId: Int,
+                 val awayPlayerId: Int,
+                 val homeScore: Array<Int>,
+                 val awayScore: Array<Int>)
 
-data class Player(val firstName: String, val lastName: String)
+data class FixturePlayer(val fixturePlayerId: Int, val firstName: String, val lastName: String)
 
-data class Team(val name: String, val players: List<Player>)
+data class Team(val name: String, val players: List<FixturePlayer>)
 
 data class FixtureDetails(val homeTeamId: Int,
                           val awayTeamId: Int,

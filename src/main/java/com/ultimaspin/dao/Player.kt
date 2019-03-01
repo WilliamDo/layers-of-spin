@@ -8,7 +8,7 @@ class PlayerDao(private val jdbi: Jdbi) {
         return jdbi.withHandle<Player, Exception> {
             it.createQuery("select * from player where id = :playerId")
                     .bind("playerId", playerId)
-                    .map { rs, _ -> Player(rs.getString("first_name"), rs.getString("last_name")) }
+                    .map { rs, _ -> Player(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name")) }
                     .findOnly()
         }
     }
@@ -24,3 +24,5 @@ class PlayerDao(private val jdbi: Jdbi) {
     }
 
 }
+
+data class Player(val id: Int, val firstName: String, val lastName: String)
