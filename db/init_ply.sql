@@ -9,6 +9,18 @@ CREATE TABLE league (
   league_name VARCHAR
 );
 
+CREATE TABLE season (
+  id SERIAL PRIMARY KEY,
+  league_id INTEGER REFERENCES league(id),
+  start DATE -- todo instead of date, maybe just make it a year?
+);
+
+CREATE TABLE division (
+  id SERIAL PRIMARY KEY,
+  season_id INTEGER REFERENCES season(id),
+  division INTEGER -- todo make this unique with season_id
+);
+
 CREATE TABLE team (
   id SERIAL PRIMARY KEY,
   team_name VARCHAR
@@ -121,7 +133,7 @@ BEGIN
   VALUES (v_fixture_id, v_f_home_player_1_id, v_f_away_player_1_id, '[11, 11, 11]', '[7, 8, 9]');
 
   INSERT INTO fixture_match (fixture_id, home_player_id, away_player_id, home_score, away_score)
-  VALUES (v_fixture_id, v_f_home_player_2_id, v_f_away_player_2_id, '[11, 11, 11]', '[7, 8, 9]');
+  VALUES (v_fixture_id, v_f_home_player_2_id, v_f_away_player_2_id, '[11, 5, 11, 11]', '[7, 11, 3, 5]');
 END $$;
 
 
