@@ -3,8 +3,11 @@ package com.ultimaspin
 import com.ultimaspin.dao.FixtureDao
 import com.ultimaspin.dao.FixtureRepo
 import com.ultimaspin.dao.PlayerDao
+import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
+import io.ktor.freemarker.FreeMarker
+import io.ktor.freemarker.FreeMarkerContent
 import io.ktor.http.*
 import io.ktor.jackson.jackson
 import io.ktor.response.*
@@ -26,10 +29,22 @@ fun main() {
                 // todo do I need anything here?
             }
         }
+        install(FreeMarker) {
+            // todo use a different class loader please!
+            templateLoader = ClassTemplateLoader(App::class.java.classLoader, "templates")
+        }
         routing {
             get("/") {
                 call.respondText("Hello, world!", ContentType.Text.Html)
             }
+
+            get("/fixture/{fixtureId}") {
+                val fixtureId = call.parameters["fixtureId"]!!
+                val fixture = repo.getFixture(fixtureId.toInt())
+                call.respond(FreeMarkerContent("scorecard.ftl", mapOf("fixture" to fixture)))
+            }
+
+
             route("/api") {
                 route("player") {
                     get("{playerId}") {
@@ -46,6 +61,7 @@ fun main() {
                     call.respond(repo.getFixture(fixtureId.toInt()))
                 }
             }
+
         }
     }
     server.start(wait = true)
