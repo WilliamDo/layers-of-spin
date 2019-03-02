@@ -26,6 +26,8 @@ CREATE TABLE team (
   team_name VARCHAR
 );
 
+-- this abstraction is supposed to model relationship between player and fixture whilst maintaining the grouping of players to a team
+-- it is intended that there will be a new record for each team's participation in a fixture
 CREATE TABLE fixture_team (
   id SERIAL PRIMARY KEY,
   team_id INTEGER REFERENCES team(id)
