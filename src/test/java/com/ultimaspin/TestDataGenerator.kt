@@ -97,7 +97,7 @@ class TestDataGenerator(private val jdbi: Jdbi) {
                         .findOnly()
             }
 
-            // todo home leg as well?
+            // todo reverse leg as well?
             // todo do a batch insert since we want to reuse the same prepared statement
 
         }
