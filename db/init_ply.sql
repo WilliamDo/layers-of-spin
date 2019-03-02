@@ -33,6 +33,7 @@ CREATE TABLE fixture_team (
 
 CREATE TABLE fixture (
   id SERIAL PRIMARY KEY,
+  division_id INTEGER REFERENCES division(id),
   fixture_date DATE,
   home_team_id INTEGER REFERENCES fixture_team(id),
   away_team_id INTEGER REFERENCES fixture_team(id)
@@ -56,6 +57,10 @@ CREATE TABLE fixture_match (
 
 DO $$
 DECLARE
+  v_league_id INT;
+  v_season_id INT;
+  v_division_id INT;
+
   v_fixture_id INT;
 
   v_home_player_1_id INT;
@@ -78,6 +83,10 @@ DECLARE
   v_f_home_team_id INT;
   v_f_away_team_id INT;
 BEGIN
+
+  INSERT INTO league (league_name) VALUES ('Super TT Stars') RETURNING id INTO v_league_id;
+  INSERT INTO season (league_id, start) VALUES (v_league_id, '2018-09-01') RETURNING id INTO v_season_id;
+  INSERT INTO division (season_id, division) VALUES (v_season_id, 1) RETURNING id INTO v_division_id;
 
   -- TEAMS --
   INSERT INTO team (team_name) VALUES ('Team A') RETURNING id INTO v_home_team_id;
@@ -112,8 +121,8 @@ BEGIN
   RETURNING id INTO v_away_player_3_id;
 
   -- FIXTURE --
-  INSERT INTO fixture (fixture_date, home_team_id, away_team_id)
-  VALUES ('2018-12-19', v_home_team_id, v_away_team_id)
+  INSERT INTO fixture (division_id, fixture_date, home_team_id, away_team_id)
+  VALUES (v_division_id, '2018-12-19', v_home_team_id, v_away_team_id)
   RETURNING id INTO v_fixture_id;
 
   INSERT INTO fixture_player (fixture_team_id, player_id)
