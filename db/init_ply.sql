@@ -12,7 +12,7 @@ CREATE TABLE league (
 CREATE TABLE season (
   id SERIAL PRIMARY KEY,
   league_id INTEGER REFERENCES league(id),
-  start DATE -- todo instead of date, maybe just make it a year?
+  start_date DATE -- todo instead of date, maybe just make it a year?
 );
 
 CREATE TABLE division (
@@ -85,7 +85,7 @@ DECLARE
 BEGIN
 
   INSERT INTO league (league_name) VALUES ('Super TT Stars') RETURNING id INTO v_league_id;
-  INSERT INTO season (league_id, start) VALUES (v_league_id, '2018-09-01') RETURNING id INTO v_season_id;
+  INSERT INTO season (league_id, start_date) VALUES (v_league_id, '2018-09-01') RETURNING id INTO v_season_id;
   INSERT INTO division (season_id, division) VALUES (v_season_id, 1) RETURNING id INTO v_division_id;
 
   -- TEAMS --
