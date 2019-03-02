@@ -3,6 +3,7 @@ package com.ultimaspin.dao
 import com.google.gson.Gson
 import org.jdbi.v3.core.Jdbi
 import java.sql.ResultSet
+import java.time.LocalDate
 
 class FixtureRepo(private val fixtureDao: FixtureDao) {
     fun getFixture(fixtureId: Int): FixtureResponse {
@@ -14,6 +15,7 @@ class FixtureRepo(private val fixtureDao: FixtureDao) {
         val awayPlayers = fixtureDao.getFixturePlayers(fixtureDetails.awayTeamId)
 
         return FixtureResponse(
+                date = fixtureDetails.date,
                 homeTeam = Team(fixtureDetails.homeTeam, homePlayers),
                 awayTeam = Team(fixtureDetails.awayTeam, awayPlayers),
                 matches = matches
@@ -41,7 +43,9 @@ class FixtureDao(private val jdbi: Jdbi) {
             handle.createQuery(sql)
                     .bind("fixtureId", fixtureId)
                     .map { rs, _ ->
+                        // todo parse the date of the fixture
                         FixtureDetails(
+                                rs.getDate("fixture_date").toLocalDate(),
                                 rs.getInt("home_team_id"),
                                 rs.getInt("away_team_id"),
                                 rs.getString("home_team"),
@@ -121,9 +125,10 @@ data class Team(val name: String, val players: List<FixturePlayer>) {
     }
 }
 
-data class FixtureDetails(val homeTeamId: Int,
+data class FixtureDetails(val date: LocalDate,
+                          val homeTeamId: Int,
                           val awayTeamId: Int,
                           val homeTeam: String,
                           val awayTeam: String)
 
-data class FixtureResponse(val homeTeam: Team, val awayTeam: Team, val matches: List<Match>)
+data class FixtureResponse(val date: LocalDate, val homeTeam: Team, val awayTeam: Team, val matches: List<Match>)

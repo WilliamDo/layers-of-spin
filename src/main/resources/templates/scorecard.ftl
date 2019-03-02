@@ -1,6 +1,8 @@
 <html>
 <h2>${fixture.homeTeam.name} vs. ${fixture.awayTeam.name}</h2>
 
+Date: ${fixture.date}
+
 <table>
     <#list fixture.matches as match>
         <#assign homePlayer=fixture.homeTeam.getPlayer(match.homePlayerId)>
