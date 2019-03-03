@@ -16,6 +16,11 @@ import org.jdbi.v3.core.Jdbi
 
 fun main() {
 
+    // todo bring some life into the leagues
+    // todo players can follow their connections
+    // todo players can comment on games etc.
+    // todo make the league experience more social online
+
     val jdbi = Jdbi.create("jdbc:postgresql://localhost/ply?user=ply&password=docker")
     val fixtureDao = FixtureDao(jdbi)
     val playerDao = PlayerDao(jdbi)
