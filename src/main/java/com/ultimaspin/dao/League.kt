@@ -34,6 +34,19 @@ class LeagueDao(private val jdbi: Jdbi) {
 
 }
 
+class LeagueRepo(private val leagueDao: LeagueDao) {
+
+    fun getLeague(leagueId: Int): LeagueResponse {
+        val league = leagueDao.getLeague(leagueId)
+        val seasons = leagueDao.getSeasons(leagueId)
+
+        return LeagueResponse(name = league.name)
+    }
+
+}
+
+data class LeagueResponse(val name: String)
+
 data class League(val id: Int, val name: String)
 
 data class Season(val id: Int, val startDate: LocalDate)

@@ -1,8 +1,6 @@
 package com.ultimaspin
 
-import com.ultimaspin.dao.FixtureDao
-import com.ultimaspin.dao.FixtureRepo
-import com.ultimaspin.dao.PlayerDao
+import com.ultimaspin.dao.*
 import freemarker.cache.ClassTemplateLoader
 import io.ktor.application.*
 import io.ktor.features.ContentNegotiation
@@ -21,7 +19,10 @@ fun main() {
     val jdbi = Jdbi.create("jdbc:postgresql://localhost/ply?user=ply&password=docker")
     val fixtureDao = FixtureDao(jdbi)
     val playerDao = PlayerDao(jdbi)
-    val repo = FixtureRepo(fixtureDao)
+    val fixtureRepo = FixtureRepo(fixtureDao)
+
+    val leagueDao = LeagueDao(jdbi)
+    val leagueRepo = LeagueRepo(leagueDao)
 
     val server = embeddedServer(Netty, 8080) {
         install(ContentNegotiation) {
@@ -38,12 +39,17 @@ fun main() {
                 call.respondText("Hello, world!", ContentType.Text.Html)
             }
 
-            get("/fixture/{fixtureId}") {
-                val fixtureId = call.parameters["fixtureId"]!!
-                val fixture = repo.getFixture(fixtureId.toInt())
-                call.respond(FreeMarkerContent("scorecard.ftl", mapOf("fixture" to fixture)))
+            get("/league/{leagueId}") {
+                val leagueId = call.parameters["leagueId"]!!
+                val league = leagueRepo.getLeague(leagueId.toInt())
+                call.respond(FreeMarkerContent("league.ftl", mapOf("league" to league)))
             }
 
+            get("/fixture/{fixtureId}") {
+                val fixtureId = call.parameters["fixtureId"]!!
+                val fixture = fixtureRepo.getFixture(fixtureId.toInt())
+                call.respond(FreeMarkerContent("scorecard.ftl", mapOf("fixture" to fixture)))
+            }
 
             route("/api") {
                 route("player") {
@@ -58,7 +64,7 @@ fun main() {
                 }
                 get("/fixture/{fixtureId}") {
                     val fixtureId = call.parameters["fixtureId"]!!
-                    call.respond(repo.getFixture(fixtureId.toInt()))
+                    call.respond(fixtureRepo.getFixture(fixtureId.toInt()))
                 }
             }
 
