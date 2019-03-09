@@ -84,3 +84,18 @@ li a {
     display: block;
 }
 
+table {
+    width: 100%;
+    text-align: center;
+}
+
+th, td {
+    padding: 15px;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+tr:nth-child(even) {background-color: #f2f2f2;}
