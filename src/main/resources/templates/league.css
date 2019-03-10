@@ -99,3 +99,33 @@ th {
   }
 
 tr:nth-child(even) {background-color: #f2f2f2;}
+
+.fixture-title {
+    text-align: center;
+}
+
+.game {
+    padding: 10px;
+    border-radius: 50%;
+    display: inline;
+}
+
+.game-home {
+    background-color: #b4ffff;
+}
+
+.game-away {
+    background-color: #ffc3c3;
+}
+
+.games {
+    list-style-type: none;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+.score-title {
+    padding: 10px;
+    border-radius: 50%;
+}
