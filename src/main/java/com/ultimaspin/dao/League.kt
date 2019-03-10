@@ -39,13 +39,23 @@ class LeagueRepo(private val leagueDao: LeagueDao) {
     fun getLeague(leagueId: Int): LeagueResponse {
         val league = leagueDao.getLeague(leagueId)
         val seasons = leagueDao.getSeasons(leagueId)
+        val currentSeason = seasons.sortedBy { it.startDate }.last()
+        val currentDivisions = leagueDao.getDivisions(currentSeason.id)
 
-        return LeagueResponse(name = league.name)
+        return LeagueResponse(
+                name = league.name,
+                seasons = seasons,
+                currentSeason = currentSeason,
+                currentDivisions = currentDivisions
+        )
     }
 
 }
 
-data class LeagueResponse(val name: String)
+data class LeagueResponse(val name: String,
+                          val seasons: List<Season>,
+                          val currentSeason: Season,
+                          val currentDivisions: List<Division>)
 
 data class League(val id: Int, val name: String)
 
