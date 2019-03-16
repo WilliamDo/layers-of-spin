@@ -16,8 +16,6 @@
             </div>
         </div>
 
-
-
         <div class="navigation">
             <div class="center-core">
                 <ul>
@@ -43,7 +41,6 @@
             </div>
 
         </div>
-
 
         <div id="site-body">
 
@@ -73,7 +70,13 @@
                             <td>
                                 <ul class="games">
                                 <#list 0..<match.numberOfGames as gameNumber>
-                                    <li class="game">${match.homeScore[gameNumber]} - ${match.awayScore[gameNumber]}</li>
+
+                                    <#if match.homeScore[gameNumber] gt match.awayScore[gameNumber]>
+                                        <li class="game game-home">
+                                    <#else>
+                                        <li class="game game-away">
+                                    </#if>
+                                        ${match.homeScore[gameNumber]} - ${match.awayScore[gameNumber]}</li>
                                 </#list>
                                 </ul>
 
@@ -83,19 +86,6 @@
 
                     </#list>
 
-
-                    <tr>
-                        <td>Patrick Chila</td>
-                        <td>
-                            <ul class="games">
-                                <li class="game game-home">11-5</li>
-                                <li class="game game-home">11-8</li>
-                                <li class="game game-home">11-9</li>
-                            </ul>
-                        </td>
-                        <td>Ma Long</td>
-                    </tr>
-
                 </tbody>
 
             </table>
@@ -103,8 +93,6 @@
         </div>
 
     </div>
-
-
 
 </body>
 
