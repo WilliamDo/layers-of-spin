@@ -7,12 +7,16 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.freemarker.FreeMarker
 import io.ktor.freemarker.FreeMarkerContent
 import io.ktor.http.*
+import io.ktor.http.content.files
+import io.ktor.http.content.static
+import io.ktor.http.content.staticRootFolder
 import io.ktor.jackson.jackson
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import org.jdbi.v3.core.Jdbi
+import java.io.File
 
 fun main() {
 
@@ -40,6 +44,14 @@ fun main() {
             templateLoader = ClassTemplateLoader(App::class.java.classLoader, "templates")
         }
         routing {
+
+            static("/static") {
+                // todo this static root currently relies on intellij setting the working directory so what do I do for production???
+                staticRootFolder = File("src/main/resources")
+                files("templates")
+
+            }
+
             get("/") {
                 call.respondText("Hello, world!", ContentType.Text.Html)
             }
