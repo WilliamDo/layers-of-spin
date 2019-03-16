@@ -114,6 +114,25 @@ data class Match(val homePlayerId: Int,
     // todo validate that away and home score arrays are same size or enforce it with a type
     val numberOfGames = homeScore.size
 
+    fun winnerPlayerId(): Int? {
+
+        var homeGames = 0;
+        var awayGames = 0;
+        for (i in 0 until homeScore.size) {
+            if (homeScore[i] > awayScore[i]) {
+                homeGames++
+            } else if (awayScore[i] > homeScore[i]) {
+                awayGames++
+            }
+        }
+
+        return when {
+            homeGames > awayGames -> homePlayerId
+            awayGames > homeGames -> awayPlayerId
+            else -> null
+        }
+
+    }
 }
 
 data class FixturePlayer(val fixturePlayerId: Int, val firstName: String, val lastName: String)
@@ -131,4 +150,18 @@ data class FixtureDetails(val date: LocalDate,
                           val homeTeam: String,
                           val awayTeam: String)
 
-data class FixtureResponse(val date: LocalDate, val homeTeam: Team, val awayTeam: Team, val matches: List<Match>)
+data class FixtureResponse(val date: LocalDate, val homeTeam: Team, val awayTeam: Team, val matches: List<Match>) {
+
+    val homeScore = matches.filter {
+        homeTeam.players.map { p ->
+            p.fixturePlayerId
+        }.contains(it.winnerPlayerId())
+    }.size
+
+    val awayScore = matches.filter {
+        awayTeam.players.map { p ->
+            p.fixturePlayerId
+        }.contains(it.winnerPlayerId())
+    }.size
+
+}

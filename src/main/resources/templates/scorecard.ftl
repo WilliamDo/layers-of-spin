@@ -44,7 +44,7 @@
 
         <div id="site-body">
 
-            <h2 class="fixture-title">${fixture.homeTeam.name} <span class="score-title game-home">6 - 4</span> ${fixture.awayTeam.name}</h2>
+            <h2 class="fixture-title">${fixture.homeTeam.name} <span class="score-title game-home">${fixture.homeScore} - ${fixture.awayScore}</span> ${fixture.awayTeam.name}</h2>
 
             Date: ${fixture.date}
 
