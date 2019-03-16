@@ -20,6 +20,9 @@ import java.io.File
 
 fun main() {
 
+    // todo highlight overall match score in fixture view with winner colour
+    // todo highlight home and away team in table headers to match the games as well
+
     // todo bring some life into the leagues
     // todo players can follow their connections
     // todo players can comment on games etc.
