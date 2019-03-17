@@ -23,6 +23,7 @@ CREATE TABLE division (
 
 CREATE TABLE team (
   id SERIAL PRIMARY KEY,
+  division_id INTEGER REFERENCES division(id),
   team_name VARCHAR
 );
 
@@ -91,8 +92,8 @@ BEGIN
   INSERT INTO division (season_id, division) VALUES (v_season_id, 1) RETURNING id INTO v_division_id;
 
   -- TEAMS --
-  INSERT INTO team (team_name) VALUES ('Team A') RETURNING id INTO v_home_team_id;
-  INSERT INTO team (team_name) VALUES ('Team B') RETURNING id INTO v_away_team_id;
+  INSERT INTO team (division_id, team_name) VALUES (v_division_id, 'Team A') RETURNING id INTO v_home_team_id;
+  INSERT INTO team (division_id, team_name) VALUES (v_division_id, 'Team B') RETURNING id INTO v_away_team_id;
 
   INSERT INTO fixture_team (team_id) VALUES (v_home_team_id) RETURNING id INTO v_f_home_team_id;
   INSERT INTO fixture_team (team_id) VALUES (v_away_team_id) RETURNING id INTO v_f_away_team_id;
