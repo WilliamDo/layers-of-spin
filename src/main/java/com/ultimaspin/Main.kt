@@ -71,6 +71,10 @@ fun main() {
                 call.respond(FreeMarkerContent("scorecard.ftl", mapOf("fixture" to fixture)))
             }
 
+            get("/division/{divisionId}") {
+                call.respond(FreeMarkerContent("division.ftl", emptyMap<String, Any>()))
+            }
+
             route("/api") {
                 route("player") {
                     get("{playerId}") {
