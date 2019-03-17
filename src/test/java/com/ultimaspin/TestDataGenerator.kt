@@ -53,7 +53,8 @@ class TestDataGenerator(private val jdbi: Jdbi) {
 
         val teamIds = (1..10).map {
             jdbi.withHandle<Int, Exception> { handle ->
-                handle.createQuery("insert into team (team_name) values (:teamName) returning id")
+                handle.createQuery("insert into team (division_id, team_name) values (:divisionId, :teamName) returning id")
+                        .bind("divisionId", divisionId)
                         .bind("teamName", "Team $name-$divisionId $it")
                         .mapTo(Int::class.java)
                         .findOnly()
