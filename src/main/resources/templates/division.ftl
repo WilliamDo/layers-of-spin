@@ -60,65 +60,17 @@
                     <th>Points</th>
                 </tr>
 
-                <tr>
-                    <td>1</td>
-                    <td>Top Spinners</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                </tr>
-
-                <tr>
-                    <td>2</td>
-                    <td>Sider Rotations</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                </tr>
-
-                <tr>
-                    <td>3</td>
-                    <td>Back Stoppers</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                </tr>
-
-                <tr>
-                    <td>4</td>
-                    <td>Wood Plyers</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                </tr>
-
-                <tr>
-                    <td>5</td>
-                    <td>Carbon Bladers</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                </tr>
-
-                <tr>
-                    <td>6</td>
-                    <td>Ball</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>0</td>
-                </tr>
+                <#list teams as team>
+                    <tr>
+                        <td>${team.id}</td>
+                        <td>${team.name}</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                        <td>0</td>
+                    </tr>
+                </#list>
             </table>
 
             <h2>Player Averages</h2>

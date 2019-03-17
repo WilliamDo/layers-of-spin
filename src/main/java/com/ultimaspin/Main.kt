@@ -72,7 +72,9 @@ fun main() {
             }
 
             get("/division/{divisionId}") {
-                call.respond(FreeMarkerContent("division.ftl", emptyMap<String, Any>()))
+                val divisionId = call.parameters["divisionId"]!!
+                val teams = leagueDao.getTeams(divisionId.toInt())
+                call.respond(FreeMarkerContent("division.ftl", mapOf("teams" to teams)))
             }
 
             route("/api") {

@@ -32,6 +32,15 @@ class LeagueDao(private val jdbi: Jdbi) {
         }
     }
 
+    fun getTeams(divisionId: Int): List<DivisionTeam> {
+        return jdbi.withHandle<List<DivisionTeam>, Exception> {
+            it.createQuery("select t.id, t.team_name from division d inner join team t on d.id = t.division_id where d.id = :divisionId")
+                    .bind("divisionId", divisionId)
+                    .map { rs, _ -> DivisionTeam(rs.getInt("id"), rs.getString("team_name")) }
+                    .toList()
+        }
+    }
+
 }
 
 class LeagueRepo(private val leagueDao: LeagueDao) {
@@ -62,3 +71,5 @@ data class League(val id: Int, val name: String)
 data class Season(val id: Int, val startDate: LocalDate)
 
 data class Division(val id: Int, val division: Int)
+
+data class DivisionTeam(val id: Int, val name: String)
