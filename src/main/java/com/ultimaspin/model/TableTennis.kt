@@ -33,6 +33,12 @@ class Game(val player1: Player,
            val pointsForPlayer2: Int,
            private val pointsToWin: Int = DEFAULT_POINTS_TO_WIN) {
 
+    init {
+        if (!isPlayer1TheWinner() && !isPlayer2TheWinner()) {
+            throw IllegalStateException("Invalid game state")
+        }
+    }
+
 
     fun getWinner(): Player {
 
@@ -47,27 +53,15 @@ class Game(val player1: Player,
     }
 
     private fun isPlayer1TheWinner(): Boolean {
-        if (pointsForPlayer1 == pointsToWin && pointsForPlayer2 <= pointsToWin - 2) {
-            return true
-        }
-
-        if (pointsForPlayer1 > pointsToWin && pointsForPlayer1 - pointsForPlayer2 >= 2) {
-            return true
-        }
-
-        return false
+        val player1WinsCleanGame = pointsForPlayer1 == pointsToWin && pointsForPlayer2 <= pointsToWin - 2
+        val player1WinsAfterDeuce = pointsForPlayer1 > pointsToWin && pointsForPlayer1 - pointsForPlayer2 >= 2
+        return player1WinsCleanGame || player1WinsAfterDeuce
     }
 
     private fun isPlayer2TheWinner(): Boolean {
-        if (pointsForPlayer2 == pointsToWin && pointsForPlayer1 <= pointsToWin - 2) {
-            return true
-        }
-
-        if (pointsForPlayer2 > pointsToWin && pointsForPlayer2 - pointsForPlayer1 >= 2) {
-            return true
-        }
-
-        return false
+        val player2WinsCleanGame = pointsForPlayer2 == pointsToWin && pointsForPlayer1 <= pointsToWin - 2
+        val player2WinsAfterDeuce = pointsForPlayer2 > pointsToWin && pointsForPlayer2 - pointsForPlayer1 >= 2
+        return player2WinsCleanGame || player2WinsAfterDeuce
     }
 
 

@@ -2,6 +2,7 @@ package com.ultimaspin.model
 
 import org.junit.Ignore
 import org.junit.Test
+import java.lang.IllegalStateException
 import kotlin.test.assertEquals
 import kotlin.test.assertSame
 
@@ -70,6 +71,20 @@ class TableTennisTest {
         )
 
         assertSame(player2, game.getWinner())
+    }
+
+    // todo consider using assertj to make this test more readable
+    @Test(expected = IllegalStateException::class)
+    fun `invalid game state throws exception`() {
+        val player1 = Player("Joe")
+        val player2 = Player("Fred")
+        val game = Game(
+                player1 = player1,
+                player2 = player2,
+                pointsForPlayer1 = 0,
+                pointsForPlayer2 = 0
+        )
+
     }
 
 }
