@@ -1,18 +1,37 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
 
 module Lib
     ( someFunc, hello, fixturePlayers, fixtureDetails, fixture
     ) where
+
+import GHC.Generics
 
 import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 
 import Data.Foldable
 
-import qualified Data.Text as Text
+import GHC.Generics
+import Data.Aeson
+import Data.Aeson.Types
 
-data Player = Player { id :: Int, first_name :: String, last_name :: String } deriving Show
-data FixtureDetails = FixtureDetails { homeTeamId :: Int, awayTeamId :: Int, homeTeam :: String, awayTeam :: String} deriving Show
+import qualified Data.Text as Text
+import qualified Data.ByteString.Lazy as B
+
+data Player = Player { id :: Int, first_name :: String, last_name :: String } deriving (Generic, Show)
+data FixtureDetails = FixtureDetails { homeTeamId :: Int, awayTeamId :: Int, homeTeam :: String, awayTeam :: String} deriving (Generic, Show)
+
+data FixtureResponse = FixtureResponse FixtureDetails [Player] [Player] deriving (Generic, Show)
+
+instance ToJSON Player where
+    toEncoding = genericToEncoding defaultOptions
+
+instance ToJSON FixtureDetails where
+    toEncoding = genericToEncoding defaultOptions
+
+instance ToJSON FixtureResponse where
+    toEncoding = genericToEncoding defaultOptions
 
 instance FromRow Player where
     fromRow = Player <$> field <*> field <*> field
@@ -40,13 +59,14 @@ fixtureDetails fixtureId = do
     [fixture] <- query conn fixtureDetailsQuery [fixtureId]
     return fixture
 
-fixture :: Int -> IO (FixtureDetails, [Player], [Player])
+fixture :: Int -> IO B.ByteString
 fixture fixtureId = do
     details <- fixtureDetails fixtureId
     let FixtureDetails homeId awayId home away = details
     homePlayers <- fixturePlayers homeId
     awayPlayers <- fixturePlayers awayId
-    return (details, homePlayers, awayPlayers)
+    let response = (FixtureResponse details homePlayers awayPlayers)
+    return (encode response)
 
 
 fixtureDetailsQuery :: Query
