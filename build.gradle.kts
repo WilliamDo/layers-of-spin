@@ -37,7 +37,6 @@ dependencies {
 group = "com.ultimaspin"
 version = "1.0-SNAPSHOT"
 description = "ply-api"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
     publications.create<MavenPublication>("maven") {
