@@ -7,7 +7,6 @@ val ktorVersion = "1.6.0"
 
 plugins {
     java
-    `maven-publish`
     kotlin("jvm") version "1.5.10"
 }
 
@@ -39,12 +38,6 @@ dependencies {
 group = "com.ultimaspin"
 version = "1.0-SNAPSHOT"
 description = "ply-api"
-
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
 
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
