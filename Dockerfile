@@ -1,6 +1,10 @@
-FROM openjdk:11-jdk
+FROM gradle:7-jdk11
 EXPOSE 8080:8080
-RUN mkdir /app
-COPY ./build/install/ply-api/ /app/
-WORKDIR /app/bin
-CMD ["./ply-api"]
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN gradle installDist
+
+CMD ["./build/install/ply-api/bin/ply-api"]
