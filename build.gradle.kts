@@ -8,6 +8,7 @@ val ktorVersion = "1.6.0"
 plugins {
     java
     kotlin("jvm") version "1.5.10"
+    application
 }
 
 repositories {
@@ -46,4 +47,8 @@ tasks.withType<JavaCompile>() {
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+
+application {
+    mainClass.set("com.ultimaspin.MainKt")
 }
