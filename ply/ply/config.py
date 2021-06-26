@@ -1,3 +1,5 @@
+import os
+
 class Config(object):
     PG_HOSTNAME = 'localhost'
     PG_DATABASE = 'ply'
@@ -12,8 +14,8 @@ class ProductionConfig(Config):
     PG_PASSWORD = 'docker'
 
 
-class DockerConfig(Config):
-    PG_HOSTNAME = 'db'
+class EnvironmentConfig(Config):
+    PG_HOSTNAME = os.environ['DATABASE_HOST']
     PG_DATABASE = 'ply'
     PG_USERNAME = 'ply'
     PG_PASSWORD = 'docker'

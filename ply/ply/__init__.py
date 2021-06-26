@@ -8,8 +8,8 @@ import ply.database
 def create_app():
     app = Flask(__name__)
 
-    app.config.from_object(config.DockerConfig()) # FIXME make this an environment variable
-
+    app.config.from_object(config.EnvironmentConfig())
+    
     @app.route("/alive", methods=["GET"])
     def alive():
         return jsonify({"alive": True})
