@@ -58,7 +58,7 @@ public class TableTennisLeagueManager implements EntryPoint {
 
     p.addWest(stackLayoutPanel, 24);
 
-    Frame frame = new Frame("/foo.html");
+    Frame frame = new Frame("index.action");
     frame.setHeight("100%");
     frame.setWidth("100%");
 
