@@ -77,6 +77,25 @@
       <artifactId>log4j-api</artifactId>
       <version>${log4j2.version}</version>
     </dependency>
+
+    <!--
+      Have to stick to 5.6 series because this is the last one to support Java 8
+      https://hibernate.org/orm/releases/
+      https://hibernate.org/orm/releases/5.6/
+    -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>5.6.15.Final</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.7.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>

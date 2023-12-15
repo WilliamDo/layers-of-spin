@@ -72,7 +72,7 @@ public class TableTennisLeagueManager implements EntryPoint {
     greetingService.getLeagues(new AsyncCallback<List<String>>() {
       @Override
       public void onFailure(Throwable throwable) {
-
+        t.addTextItem("Something went wrong: " + throwable.getMessage());
       }
 
       @Override

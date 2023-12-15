@@ -1,12 +1,17 @@
 package com.ultimaspin.retrodev.server;
 
 import com.google.gwt.thirdparty.guava.common.collect.Lists;
+import com.ultimaspin.retrodev.League;
+import com.ultimaspin.retrodev.LeagueDao;
 import com.ultimaspin.retrodev.client.GreetingService;
 import com.ultimaspin.retrodev.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The server-side implementation of the RPC service.
@@ -14,6 +19,8 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
     GreetingService {
+
+  private static final Logger logger = LogManager.getLogger(GreetingServiceImpl.class);
 
   public String greetServer(String input) throws IllegalArgumentException {
     // Verify that the input is valid. 
@@ -37,10 +44,18 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
   @Override
   public List<String> getLeagues() {
-    List<String> leagues = new ArrayList<>();
-    leagues.add("Becontree");
-    leagues.add("Romford");
-    return leagues;
+    try {
+      logger.debug("Fetching leagues");
+      List<String> leaguesFromDb = new LeagueDao().getLeagues().stream().map(League::getLeagueName).collect(Collectors.toList());
+      List<String> leagues = new ArrayList<>();
+      leagues.add("Becontree");
+      leagues.add("Romford");
+      leagues.addAll(leaguesFromDb);
+      return leagues;
+    } catch (Exception e) {
+      logger.error("Could not fetch leagues from database", e);
+      throw e;
+    }
   }
 
   /**
