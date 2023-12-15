@@ -12,6 +12,8 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
+import java.util.List;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -50,7 +52,7 @@ public class TableTennisLeagueManager implements EntryPoint {
     root.addItem(item);
 
     Tree t = new Tree();
-    t.addItem(root);
+//    t.addItem(root);
 
     stackLayoutPanel.add(t, new HTML("Leagues"), 4);
     stackLayoutPanel.add(new HTML("that content"), new HTML("Clubs"), 4);
@@ -66,6 +68,26 @@ public class TableTennisLeagueManager implements EntryPoint {
     flowPanel.add(frame);
 
     p.add(flowPanel);
+
+    greetingService.getLeagues(new AsyncCallback<List<String>>() {
+      @Override
+      public void onFailure(Throwable throwable) {
+
+      }
+
+      @Override
+      public void onSuccess(List<String> strings) {
+        t.removeItems();
+        strings.forEach(it -> {
+          Label label = new Label(it);
+          label.addClickHandler(clickEvent -> {
+            frame.setUrl("viewLeague.action?leagueName=" + it);
+          });
+          t.add(label);
+
+        });
+      }
+    });
 
     RootLayoutPanel.get().add(p);
   }

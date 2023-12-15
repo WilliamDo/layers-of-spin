@@ -1,8 +1,12 @@
 package com.ultimaspin.retrodev.server;
 
+import com.google.gwt.thirdparty.guava.common.collect.Lists;
 import com.ultimaspin.retrodev.client.GreetingService;
 import com.ultimaspin.retrodev.shared.FieldVerifier;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The server-side implementation of the RPC service.
@@ -29,6 +33,14 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
     return "Hello, " + input + "!<br><br>I am running " + serverInfo
         + ".<br><br>It looks like you are using:<br>" + userAgent;
+  }
+
+  @Override
+  public List<String> getLeagues() {
+    List<String> leagues = new ArrayList<>();
+    leagues.add("Becontree");
+    leagues.add("Romford");
+    return leagues;
   }
 
   /**

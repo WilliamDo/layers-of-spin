@@ -17,6 +17,9 @@
         <action name="hello" class="com.ultimaspin.retrodev.HelloWorldAction" method="execute">
             <result name="success">/HelloWorld.jsp</result>
         </action>
+        <action name="viewLeague" class="com.ultimaspin.retrodev.ViewLeagueAction" method="execute">
+            <result name="success">/league.jsp</result>
+        </action>
     </package>
 
 </struts>
