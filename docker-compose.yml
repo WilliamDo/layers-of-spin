@@ -1,17 +1,12 @@
 version: "3.9"  # optional since v1.27.0
 services:
-  ply:
-    build: ./ply
+
+  ply-retro:
+    build: ./ply-retro
     ports:
-      - "5000:5000"
+      - "8888:8080"
     environment:
-      DATABASE_HOST: db
-  ply-api:
-    build: ./ply-api
-    ports:
-      - "8080:8080"
-    environment:
-      DATABASE_HOST: db
+      CATALINA_OPTS: "-DdbConnectionUrl=jdbc:postgresql://db:5432/ply"
   db:
     build: ./ply/db
     ports:

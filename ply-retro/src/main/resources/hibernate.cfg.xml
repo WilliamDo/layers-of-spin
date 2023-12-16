@@ -15,7 +15,8 @@
 
         <!-- Database connection settings -->
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="connection.url">jdbc:postgresql://host.docker.internal:5432/ply</property>
+        <property name="connection.url">${dbConnectionUrl}</property>
+<!--        <property name="connection.url">jdbc:postgresql://host.docker.internal:5432/ply</property>-->
 <!--        <property name="connection.url">jdbc:postgresql://localhost:5432/ply</property>-->
         <property name="connection.username">ply</property>
         <property name="connection.password">docker</property>
